@@ -1,6 +1,6 @@
 critzlez - init git, main()
 
-terminator - tasklist(), argument parser help function, others if needed
+terminator - tasklist(), argument parser help function
 
 bakana - dir(), echo()
 
