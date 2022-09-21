@@ -33,6 +33,19 @@ void *threadDummyFunc(void *arg)
     pthread_exit(0);
 }
 
+void *path(void *arg)
+{
+    std::cout << "Printing path env\n";
+    system("echo \"$PATH\"");
+    pthread_exit(0);
+}
+
+void *notepad(void *arg) {
+    std::cout << "Launching text editor\n";
+    system("nano");
+    pthread_exit(0);
+}
+
 int main()
 {
     while (1)
@@ -51,7 +64,12 @@ int main()
         int error;
         if (cmd == "dummy")
             error = pthread_create(&thread, NULL, &threadDummyFunc, NULL);
-
+        // Print system enviroment PATH
+        else if (cmd == "path")
+                error = pthread_create(&thread, NULL, &path, NULL);
+        // Launch a text editor
+        else if (cmd == "notepad")
+            error = pthread_create(&thread, NULL, &notepad, NULL);
         /*
                 else if (cmd == "dir")
                     error = pthread_create(&thread, NULL, &dir, NULL);
