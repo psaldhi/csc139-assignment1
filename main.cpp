@@ -14,12 +14,10 @@
 
 using namespace std;
 
-string args;
-string parsedArgs[5];
-
 // TO BE DONE BY TERMINATOR
 // MODIFY parsedArgs[5]
-void argumentParser(string args)
+// Return parsed string array
+string *argumentParser(string args)
 {
 }
 /////////////////////////////
@@ -27,8 +25,9 @@ void argumentParser(string args)
 // EXAMPLE THREAD FUNCTION, WILL BE CALLED BY pthread_create()
 void *threadDummyFunc(void *arg)
 {
+    string *str = (string *)arg;
     std::cout << "dummy function\n";
-    std::cout << "argument passed: " << (string *)arg << endl;
+    std::cout << "argument passed: " << str[0] << endl;
 
     pthread_exit(0);
 }
@@ -40,7 +39,8 @@ void *path(void *arg)
     pthread_exit(0);
 }
 
-void *notepad(void *arg) {
+void *notepad(void *arg)
+{
     std::cout << "Launching text editor\n";
     system("nano");
     pthread_exit(0);
@@ -51,6 +51,7 @@ int main()
     while (1)
     {
         string cmd;
+        string args;
 
         cout << "Enter command: ";
         cin >> cmd;
@@ -58,12 +59,21 @@ int main()
         cout << "Enter arguments, spacing them out (arg1 arg2 arg3): ";
         cin >> args;
 
-        argumentParser(args);
+        // Parse input to get the arguments as string array
+
+        // THIS IS A TEST PARSEDARGS VAR UNTIL PARSE ARG FUNCTION IS COMPLETED
+        /////////////////////////////////////////////////////
+        string *parsedArgs = new string[5];
+        parsedArgs[0] = "1";
+        parsedArgs[1] = "2";
+        /////////////////////////////////////////////////////
+        // REPLACE ABOVE WITH THE COMMENTED CODE BELOW WHEN PARSE ARG FUNCTION IS COMPLETED
+        // string *parsedArgs = argumentParser(args);
 
         pthread_t thread;
         int error;
         if (cmd == "dummy")
-            error = pthread_create(&thread, NULL, &threadDummyFunc, NULL);
+            error = pthread_create(&thread, NULL, &threadDummyFunc, (void *)parsedArgs);
         // Print system enviroment PATH
         else if (cmd == "path")
                 error = pthread_create(&thread, NULL, &path, NULL);
