@@ -11,6 +11,8 @@
 #include <iostream>
 #include <string>
 #include <pthread.h>
+#include <stdio.h>
+#include <string.h>
 
 using namespace std;
 
@@ -35,6 +37,25 @@ void *notepad(void *arg)
 {
     std::cout << "Launching text editor\n";
     system("nano");
+    pthread_exit(0);
+}
+
+void *vol(void *arg)
+{
+    std::cout << "Volume information\n";
+    system("lsblk");
+    pthread_exit(0);
+}
+
+void *ping(void *arg)
+{
+    string *str = (string *)arg;
+    std::cout << "Ping statistics\n";
+    const char* address = str[0].c_str();
+    char cmd[256];
+    strcpy(cmd, "ping -c 4 ");
+    strcat(cmd, address);
+    system(cmd);
     pthread_exit(0);
 }
 
@@ -72,6 +93,12 @@ int main()
         // Launch a text editor
         else if (cmd == "notepad")
             error = pthread_create(&thread, NULL, &notepad, NULL);
+
+        else if (cmd == "vol")
+                    error = pthread_create(&thread, NULL, &vol, NULL);
+
+        else if (cmd == "ping")
+                    error = pthread_create(&thread, NULL, &ping, args);
         /*
                 else if (cmd == "dir")
                     error = pthread_create(&thread, NULL, &dir, NULL);
@@ -85,11 +112,7 @@ int main()
                 else if (cmd == "color")
                     error = pthread_create(&thread, NULL, &color, NULL);
 
-                else if (cmd == "vol")
-                    error = pthread_create(&thread, NULL, &vol, NULL);
-
-                else if (cmd == "ping")
-                    error = pthread_create(&thread, NULL, &ping, NULL);
+                
 
                 else if (cmd == "path")
                     error = pthread_create(&thread, NULL, &path, NULL);
