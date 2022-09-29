@@ -57,6 +57,7 @@ void *ping(void *arg)
     char cmd[256];
     strcpy(cmd, "ping -c 4 ");
     strcat(cmd, address);
+}
 
 void *dir(void *arg)
 {
