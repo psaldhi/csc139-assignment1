@@ -40,10 +40,10 @@ void *notepad(void *arg)
 
 int main()
 {
+    string *args = new string[4];
     while (1)
     {
         string cmd;
-        string *args = new string[4];
 
         cout << "Enter command: ";
         cin >> cmd;
