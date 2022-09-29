@@ -14,20 +14,12 @@
 
 using namespace std;
 
-// TO BE DONE BY TERMINATOR
-// MODIFY parsedArgs[5]
-// Return parsed string array
-string *argumentParser(string args)
-{
-}
-/////////////////////////////
-
 // EXAMPLE THREAD FUNCTION, WILL BE CALLED BY pthread_create()
 void *threadDummyFunc(void *arg)
 {
     string *str = (string *)arg;
     std::cout << "dummy function\n";
-    std::cout << "argument passed: " << str[0] << endl;
+    std::cout << "argument 1 passed: " << str[0] << endl;
 
     pthread_exit(0);
 }
@@ -51,29 +43,29 @@ int main()
     while (1)
     {
         string cmd;
-        string args;
+        string *args = new string[4];
 
         cout << "Enter command: ";
         cin >> cmd;
 
-        cout << "Enter arguments, spacing them out (arg1 arg2 arg3): ";
-        cin >> args;
+        std::cout << "Enter 4 arguments. type something random to skip arguments if more isn't needed\n";
 
-        // Parse input to get the arguments as string array
+        cout << "Enter arg 1: ";
+        cin >> args[0];
 
-        // THIS IS A TEST PARSEDARGS VAR UNTIL PARSE ARG FUNCTION IS COMPLETED
-        /////////////////////////////////////////////////////
-        string *parsedArgs = new string[5];
-        parsedArgs[0] = "1";
-        parsedArgs[1] = "2";
-        /////////////////////////////////////////////////////
-        // REPLACE ABOVE WITH THE COMMENTED CODE BELOW WHEN PARSE ARG FUNCTION IS COMPLETED
-        // string *parsedArgs = argumentParser(args);
+        cout << "Enter arg 2: ";
+        cin >> args[1];
+
+        cout << "Enter arg 3: ";
+        cin >> args[2];
+
+        cout << "Enter arg 4: ";
+        cin >> args[3];
 
         pthread_t thread;
         int error;
         if (cmd == "dummy")
-            error = pthread_create(&thread, NULL, &threadDummyFunc, (void *)parsedArgs);
+            error = pthread_create(&thread, NULL, &threadDummyFunc, args);
         // Print system enviroment PATH
         else if (cmd == "path")
                 error = pthread_create(&thread, NULL, &path, NULL);
