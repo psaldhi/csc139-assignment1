@@ -12,7 +12,9 @@
 #include <string>
 #include <pthread.h>
 #include <stdio.h>
-#include <string.h>
+#include <sstream>
+#include <cstring>
+
 
 using namespace std;
 
@@ -55,6 +57,31 @@ void *ping(void *arg)
     char cmd[256];
     strcpy(cmd, "ping -c 4 ");
     strcat(cmd, address);
+
+void *dir(void *arg)
+{
+    std::cout << "Files in current working directory\n";
+    system("dir");
+    pthread_exit(0);
+}
+
+void *echo(void *arg)
+{
+    string *str = (string *)arg;
+    std::cout << "Server says:\n";
+    const char *arg1 = str[0].c_str();
+    const char *arg2 = str[1].c_str();
+    const char *arg3 = str[2].c_str();
+    const char *arg4 = str[3].c_str();
+    char cmd[256];
+    strcpy(cmd, "echo ");
+    strcat(cmd, arg1);
+    strcat(cmd, " ");
+    strcat(cmd, arg2);
+    strcat(cmd, " ");
+    strcat(cmd, arg3);
+    strcat(cmd, " ");
+    strcat(cmd, arg4);
     system(cmd);
     pthread_exit(0);
 }
@@ -67,21 +94,21 @@ int main()
         string cmd;
 
         cout << "Enter command: ";
-        cin >> cmd;
+        getline(cin, cmd);
 
-        std::cout << "Enter 4 arguments. type something random to skip arguments if more isn't needed\n";
+        std::cout << "Enter at most 4 arguments separated with spaces: ";
+        string input;
+        getline(cin, input);
 
-        cout << "Enter arg 1: ";
-        cin >> args[0];
-
-        cout << "Enter arg 2: ";
-        cin >> args[1];
-
-        cout << "Enter arg 3: ";
-        cin >> args[2];
-
-        cout << "Enter arg 4: ";
-        cin >> args[3];
+        // Parse input and place arguments in the args array
+        istringstream ss(input);
+        string w;
+        int i = 0;
+        while (ss >> w)
+        {
+            args[i] = w;
+            i++;
+        }
 
         pthread_t thread;
         int error;
@@ -89,38 +116,37 @@ int main()
             error = pthread_create(&thread, NULL, &threadDummyFunc, args);
         // Print system enviroment PATH
         else if (cmd == "path")
-                error = pthread_create(&thread, NULL, &path, NULL);
+            error = pthread_create(&thread, NULL, &path, NULL);
         // Launch a text editor
         else if (cmd == "notepad")
             error = pthread_create(&thread, NULL, &notepad, NULL);
+
 
         else if (cmd == "vol")
                     error = pthread_create(&thread, NULL, &vol, NULL);
 
         else if (cmd == "ping")
                     error = pthread_create(&thread, NULL, &ping, args);
+
+        else if (cmd == "dir")
+            error = pthread_create(&thread, NULL, &dir, NULL);
+
+        else if (cmd == "echo")
+            error = pthread_create(&thread, NULL, &echo, args);
+
         /*
-                else if (cmd == "dir")
-                    error = pthread_create(&thread, NULL, &dir, NULL);
+                        else if (cmd == "help")
+                            error = pthread_create(&thread, NULL, &help, NULL);
 
-                else if (cmd == "echo")
-                    error = pthread_create(&thread, NULL, &echo, NULL);
+                        else if (cmd == "color")
+                            error = pthread_create(&thread, NULL, &color, NULL);
 
-                else if (cmd == "help")
-                    error = pthread_create(&thread, NULL, &help, NULL);
+                        else if (cmd == "path")
+                            error = pthread_create(&thread, NULL, &path, NULL);
 
-                else if (cmd == "color")
-                    error = pthread_create(&thread, NULL, &color, NULL);
-
-                
-
-                else if (cmd == "path")
-                    error = pthread_create(&thread, NULL, &path, NULL);
-
-                else if (cmd == "notepad")
-                    error = pthread_create(&thread, NULL, &notepad, NULL);
-        */
-        //////////
+                        else if (cmd == "notepad")
+                            error = pthread_create(&thread, NULL, &notepad, NULL);
+                */
 
         if (error)
             cout << "Failed to create thread\n";
