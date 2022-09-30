@@ -35,6 +35,20 @@ void *path(void *arg)
     pthread_exit(0);
 }
 
+void tasklist(){
+    std::cout << "dir\n";
+    std::cout << "help\n";
+    std::cout << "vol\n";
+    std::cout << "path\n";
+    std::cout << "notepad\n";
+    std::cout << "tasklist\n";
+    std::cout << "echo\n";
+    std::cout << "color\n";
+    std::cout << "ping\n";
+
+
+}
+
 void *notepad(void *arg)
 {
     std::cout << "Launching text editor\n";
